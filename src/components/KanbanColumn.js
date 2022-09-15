@@ -44,6 +44,11 @@ const KanbanColumn = ({
   }
   const handleDragDrop = (e) => {
     e.preventDefault()
+
+    if (e.dataTransfer.getData('kanban-item-id')) {
+      return
+    }
+
     dragKanbanColumn(
       parseInt(e.dataTransfer.getData('kanban-column-id'), 10),
       id,
@@ -86,7 +91,12 @@ const KanbanColumn = ({
             updateContent={(itemId, nextContent) =>
               updateContent(id, itemId, nextContent)
             }
-            dragKanbanItem={(fromId, toId) => dragKanbanItem(id, fromId, toId)}
+            setColumnIdForDrag={(e) =>
+              e.dataTransfer.setData('kanban-column-id', id)
+            }
+            dragKanbanItem={(fromdColumnId, fromItemId, toItemId) =>
+              dragKanbanItem(fromdColumnId, id, fromItemId, toItemId)
+            }
           />
         ))}
       </KanbanList>
