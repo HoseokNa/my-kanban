@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import KanbanItem from './KanbanItem'
 
 const KanbanColumn = ({
+  id,
   title,
   kanbanList,
   updateTitle,
@@ -29,7 +30,7 @@ const KanbanColumn = ({
     }
 
     if (e.key === 'Enter') {
-      updateTitle(inputTitle)
+      updateTitle(id, inputTitle)
       setIsEditMode(false)
     }
   }
@@ -57,17 +58,19 @@ const KanbanColumn = ({
         }}
       />
       <KanbanList>
-        {kanbanList.map(({ id, content }) => (
+        {kanbanList.map(({ id: itemId, content }) => (
           <KanbanItem
-            key={id}
-            id={id}
+            key={itemId}
+            id={itemId}
             content={content}
-            updateContent={updateContent}
-            dragKanbanItem={dragKanbanItem}
+            updateContent={(itemId, nextContent) =>
+              updateContent(id, itemId, nextContent)
+            }
+            dragKanbanItem={(fromId, toId) => dragKanbanItem(id, fromId, toId)}
           />
         ))}
       </KanbanList>
-      <AddButton onClick={addKanbanItem}>+ Add a card</AddButton>
+      <AddButton onClick={() => addKanbanItem(id)}>+ Add a card</AddButton>
     </Container>
   )
 }

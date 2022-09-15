@@ -1,69 +1,151 @@
+import styled from '@emotion/styled'
 import { useState } from 'react'
 import KanbanColumn from './components/KanbanColumn'
 
-const DUMMY_ITEMS = [
-  { id: 1, content: '첫번째' },
-  { id: 2, content: '두번째' },
-  { id: 3, content: '세번째' },
+const DUMMY_DATA = [
+  {
+    id: 1,
+    title: 'title1',
+    kanbanList: [
+      { id: 1, content: '첫번째' },
+      { id: 2, content: '두번째' },
+      { id: 3, content: '세번째' },
+    ],
+  },
+  {
+    id: 2,
+    title: 'title2',
+    kanbanList: [
+      { id: 1, content: '22 첫번째' },
+      { id: 2, content: '22 두번째' },
+      { id: 3, content: '22 세번째' },
+    ],
+  },
+  {
+    id: 3,
+    title: 'title3',
+    kanbanList: [
+      { id: 1, content: '33 첫번째' },
+      { id: 2, content: '33 두번째' },
+      { id: 3, content: '33 세번째' },
+    ],
+  },
 ]
 
 function App() {
-  const [kanbanItems, setKanbanItems] = useState(DUMMY_ITEMS)
-  const [title, setTitle] = useState('kanban title')
-  const updateTitle = (nextTitle) => setTitle(nextTitle)
-  const updateContent = (id, nextContent) => {
-    const nextKanbanItems = kanbanItems.map((item) => {
-      if (item.id !== id) {
-        return item
+  const [kanbanColumns, setKanbanColumns] = useState(DUMMY_DATA)
+  const updateTitle = (kanbanColumnId, nextTitle) => {
+    const nextKanbanColumns = kanbanColumns.map((kanbanColumn) => {
+      if (kanbanColumn.id !== kanbanColumnId) {
+        return kanbanColumn
       }
 
-      return { ...item, content: nextContent }
+      return { ...kanbanColumn, title: nextTitle }
     })
 
-    setKanbanItems(nextKanbanItems)
+    setKanbanColumns(nextKanbanColumns)
   }
-  const addKanbanItem = () =>
-    setKanbanItems([
-      ...kanbanItems,
-      { id: kanbanItems.at(-1).id + 1, content: '새로운 카드' },
-    ])
-  const dragKanbanItem = (fromId, toId) => {
+  const updateContent = (kanbanColumnId, kanbanItemId, nextContent) => {
+    const nextKanbanColumns = kanbanColumns.map((kanbanColumn) => {
+      if (kanbanColumn.id !== kanbanColumnId) {
+        return kanbanColumn
+      }
+
+      const nextKanbanList = kanbanColumn.kanbanList.map((item) => {
+        if (item.id !== kanbanItemId) {
+          return item
+        }
+
+        return { ...item, content: nextContent }
+      })
+
+      return { ...kanbanColumn, kanbanList: nextKanbanList }
+    })
+
+    setKanbanColumns(nextKanbanColumns)
+  }
+  const addKanbanItem = (kanbanColumnId) => {
+    const nextKanbanColumns = kanbanColumns.map((kanbanColumn) => {
+      if (kanbanColumn.id !== kanbanColumnId) {
+        return kanbanColumn
+      }
+
+      const nextItem = {
+        id: new Date().getMilliseconds(),
+        content: '새로운 카드',
+      }
+
+      return {
+        ...kanbanColumn,
+        kanbanList: [...kanbanColumn.kanbanList, nextItem],
+      }
+    })
+
+    setKanbanColumns(nextKanbanColumns)
+  }
+
+  const dragKanbanItem = (kanbanColumnId, fromId, toId) => {
+    console.log(fromId, toId)
+
     if (fromId === toId) {
       return
     }
 
-    const fromIndex = kanbanItems.findIndex(({ id }) => id === fromId)
-    const toIndex = kanbanItems.findIndex(({ id }) => id === toId)
-    const fromKanbanItem = kanbanItems[fromIndex]
-    const nextKanbanItems = kanbanItems.filter(({ id }) => id !== fromId)
-    const nexToIndex = nextKanbanItems.findIndex(({ id }) => id === toId)
+    const nextKanbanColumns = kanbanColumns.map((kanbanColumn) => {
+      if (kanbanColumn.id !== kanbanColumnId) {
+        return kanbanColumn
+      }
 
-    if (fromIndex < toIndex) {
-      nextKanbanItems.splice(
-        nexToIndex,
-        1,
-        nextKanbanItems[nexToIndex],
-        fromKanbanItem,
-      )
-      setKanbanItems(nextKanbanItems)
+      const kanbanItems = kanbanColumns.find(
+        ({ id }) => id === kanbanColumnId,
+      ).kanbanList
+      const fromIndex = kanbanItems.findIndex(({ id }) => id === fromId)
+      const toIndex = kanbanItems.findIndex(({ id }) => id === toId)
+      const fromKanbanItem = kanbanItems[fromIndex]
+      const nextKanbanItems = kanbanItems.filter(({ id }) => id !== fromId)
+      const nexToIndex = nextKanbanItems.findIndex(({ id }) => id === toId)
 
-      return
-    }
+      fromIndex < toIndex
+        ? nextKanbanItems.splice(
+            nexToIndex,
+            1,
+            nextKanbanItems[nexToIndex],
+            fromKanbanItem,
+          )
+        : nextKanbanItems.splice(
+            toIndex,
+            1,
+            fromKanbanItem,
+            nextKanbanItems[toIndex],
+          )
 
-    nextKanbanItems.splice(toIndex, 1, fromKanbanItem, nextKanbanItems[toIndex])
-    setKanbanItems(nextKanbanItems)
+      return { ...kanbanColumn, kanbanList: nextKanbanItems }
+    })
+
+    setKanbanColumns(nextKanbanColumns)
   }
 
   return (
-    <KanbanColumn
-      title={title}
-      kanbanList={kanbanItems}
-      updateTitle={updateTitle}
-      updateContent={updateContent}
-      addKanbanItem={addKanbanItem}
-      dragKanbanItem={dragKanbanItem}
-    />
+    <Container>
+      {kanbanColumns.map(({ id, title, kanbanList }) => (
+        <KanbanColumn
+          key={id}
+          id={id}
+          title={title}
+          kanbanList={kanbanList}
+          updateTitle={updateTitle}
+          updateContent={updateContent}
+          addKanbanItem={addKanbanItem}
+          dragKanbanItem={dragKanbanItem}
+        />
+      ))}
+    </Container>
   )
 }
 
 export default App
+
+const Container = styled.div`
+  display: flex;
+  gap: 24px;
+`
