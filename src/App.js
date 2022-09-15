@@ -27,6 +27,32 @@ function App() {
       ...kanbanItems,
       { id: kanbanItems.at(-1).id + 1, content: '새로운 카드' },
     ])
+  const dragKanbanItem = (fromId, toId) => {
+    if (fromId === toId) {
+      return
+    }
+
+    const fromIndex = kanbanItems.findIndex(({ id }) => id === fromId)
+    const toIndex = kanbanItems.findIndex(({ id }) => id === toId)
+    const fromKanbanItem = kanbanItems[fromIndex]
+    const nextKanbanItems = kanbanItems.filter(({ id }) => id !== fromId)
+    const nexToIndex = nextKanbanItems.findIndex(({ id }) => id === toId)
+
+    if (fromIndex < toIndex) {
+      nextKanbanItems.splice(
+        nexToIndex,
+        1,
+        nextKanbanItems[nexToIndex],
+        fromKanbanItem,
+      )
+      setKanbanItems(nextKanbanItems)
+
+      return
+    }
+
+    nextKanbanItems.splice(toIndex, 1, fromKanbanItem, nextKanbanItems[toIndex])
+    setKanbanItems(nextKanbanItems)
+  }
 
   return (
     <KanbanColumn
@@ -35,6 +61,7 @@ function App() {
       updateTitle={updateTitle}
       updateContent={updateContent}
       addKanbanItem={addKanbanItem}
+      dragKanbanItem={dragKanbanItem}
     />
   )
 }

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useEffect, useRef, useState } from 'react'
 
-function KanbanItem({ id, content, updateContent }) {
+function KanbanItem({ id, content, updateContent, dragKanbanItem }) {
   const inputRef = useRef(null)
   const [isEditMode, setIsEditMode] = useState(false)
   const [inputContent, setInputContent] = useState(content)
@@ -25,6 +25,17 @@ function KanbanItem({ id, content, updateContent }) {
       setIsEditMode(false)
     }
   }
+  const handleDragStart = (e) => {
+    e.dataTransfer.setData('kanban-id', id)
+  }
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+  const handleDragDrop = (e) => {
+    e.preventDefault()
+    dragKanbanItem(parseInt(e.dataTransfer.getData('kanban-id'), 10), id)
+  }
 
   useEffect(() => {
     if (isEditMode) {
@@ -34,6 +45,10 @@ function KanbanItem({ id, content, updateContent }) {
 
   return (
     <Container
+      draggable
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={handleDragDrop}
       onClick={() => {
         setIsEditMode(true)
       }}

@@ -8,6 +8,7 @@ const KanbanColumn = ({
   updateTitle,
   updateContent,
   addKanbanItem,
+  dragKanbanItem,
 }) => {
   const inputRef = useRef(null)
   const [isEditMode, setIsEditMode] = useState(false)
@@ -62,6 +63,7 @@ const KanbanColumn = ({
             id={id}
             content={content}
             updateContent={updateContent}
+            dragKanbanItem={dragKanbanItem}
           />
         ))}
       </KanbanList>
