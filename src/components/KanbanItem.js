@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { useEffect, useRef, useState } from 'react'
 
-function KanbanItem({ content, updateContent }) {
+function KanbanItem({ id, content, updateContent }) {
   const inputRef = useRef(null)
   const [isEditMode, setIsEditMode] = useState(false)
   const [inputContent, setInputContent] = useState(content)
@@ -21,7 +21,7 @@ function KanbanItem({ content, updateContent }) {
     }
 
     if (e.key === 'Enter') {
-      updateContent(inputContent)
+      updateContent(id, inputContent)
       setIsEditMode(false)
     }
   }
