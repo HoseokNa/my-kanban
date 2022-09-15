@@ -9,6 +9,7 @@ const KanbanColumn = ({
   updateTitle,
   updateContent,
   addKanbanItem,
+  dragKanbanColumn,
   dragKanbanItem,
 }) => {
   const inputRef = useRef(null)
@@ -34,6 +35,20 @@ const KanbanColumn = ({
       setIsEditMode(false)
     }
   }
+  const handleDragStart = (e) => {
+    e.dataTransfer.setData('kanban-column-id', id)
+  }
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+  const handleDragDrop = (e) => {
+    e.preventDefault()
+    dragKanbanColumn(
+      parseInt(e.dataTransfer.getData('kanban-column-id'), 10),
+      id,
+    )
+  }
 
   useEffect(() => {
     if (isEditMode) {
@@ -42,7 +57,12 @@ const KanbanColumn = ({
   }, [isEditMode])
 
   return (
-    <Container>
+    <Container
+      draggable
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={handleDragDrop}
+    >
       <Title onClick={() => setIsEditMode(true)} isEditMode={isEditMode}>
         {title}
       </Title>

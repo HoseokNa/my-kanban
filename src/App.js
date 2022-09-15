@@ -83,10 +83,34 @@ function App() {
 
     setKanbanColumns(nextKanbanColumns)
   }
+  const dragKanbanColumn = (fromId, toId) => {
+    if (fromId === toId) {
+      return
+    }
 
+    const fromIndex = kanbanColumns.findIndex(({ id }) => id === fromId)
+    const toIndex = kanbanColumns.findIndex(({ id }) => id === toId)
+    const fromKanbanItem = kanbanColumns[fromIndex]
+    const nextKanbanColumns = kanbanColumns.filter(({ id }) => id !== fromId)
+    const nexToIndex = nextKanbanColumns.findIndex(({ id }) => id === toId)
+
+    fromIndex < toIndex
+      ? nextKanbanColumns.splice(
+          nexToIndex,
+          1,
+          nextKanbanColumns[nexToIndex],
+          fromKanbanItem,
+        )
+      : nextKanbanColumns.splice(
+          toIndex,
+          1,
+          fromKanbanItem,
+          nextKanbanColumns[toIndex],
+        )
+
+    setKanbanColumns(nextKanbanColumns)
+  }
   const dragKanbanItem = (kanbanColumnId, fromId, toId) => {
-    console.log(fromId, toId)
-
     if (fromId === toId) {
       return
     }
@@ -136,6 +160,7 @@ function App() {
           updateTitle={updateTitle}
           updateContent={updateContent}
           addKanbanItem={addKanbanItem}
+          dragKanbanColumn={dragKanbanColumn}
           dragKanbanItem={dragKanbanItem}
         />
       ))}

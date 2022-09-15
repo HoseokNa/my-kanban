@@ -26,7 +26,7 @@ function KanbanItem({ id, content, updateContent, dragKanbanItem }) {
     }
   }
   const handleDragStart = (e) => {
-    e.dataTransfer.setData('kanban-id', id)
+    e.dataTransfer.setData('kanban-item-id', id)
   }
   const handleDragOver = (e) => {
     e.preventDefault()
@@ -34,7 +34,7 @@ function KanbanItem({ id, content, updateContent, dragKanbanItem }) {
   }
   const handleDragDrop = (e) => {
     e.preventDefault()
-    dragKanbanItem(parseInt(e.dataTransfer.getData('kanban-id'), 10), id)
+    dragKanbanItem(parseInt(e.dataTransfer.getData('kanban-item-id'), 10), id)
   }
 
   useEffect(() => {
