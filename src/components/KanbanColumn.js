@@ -3,11 +3,14 @@ import { useEffect, useRef, useState } from 'react'
 import KanbanItem from './KanbanItem'
 
 const KanbanColumn = ({
+  id,
   title,
   kanbanList,
   updateTitle,
   updateContent,
   addKanbanItem,
+  dragKanbanColumn,
+  dragKanbanItem,
 }) => {
   const inputRef = useRef(null)
   const [isEditMode, setIsEditMode] = useState(false)
@@ -28,9 +31,28 @@ const KanbanColumn = ({
     }
 
     if (e.key === 'Enter') {
-      updateTitle(inputTitle)
+      updateTitle(id, inputTitle)
       setIsEditMode(false)
     }
+  }
+  const handleDragStart = (e) => {
+    e.dataTransfer.setData('kanban-column-id', id)
+  }
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+  const handleDragDrop = (e) => {
+    e.preventDefault()
+
+    if (e.dataTransfer.getData('kanban-item-id')) {
+      return
+    }
+
+    dragKanbanColumn(
+      parseInt(e.dataTransfer.getData('kanban-column-id'), 10),
+      id,
+    )
   }
 
   useEffect(() => {
@@ -40,7 +62,12 @@ const KanbanColumn = ({
   }, [isEditMode])
 
   return (
-    <Container>
+    <Container
+      draggable
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={handleDragDrop}
+    >
       <Title onClick={() => setIsEditMode(true)} isEditMode={isEditMode}>
         {title}
       </Title>
@@ -56,16 +83,24 @@ const KanbanColumn = ({
         }}
       />
       <KanbanList>
-        {kanbanList.map(({ id, content }) => (
+        {kanbanList.map(({ id: itemId, content }) => (
           <KanbanItem
-            key={id}
-            id={id}
+            key={itemId}
+            id={itemId}
             content={content}
-            updateContent={updateContent}
+            updateContent={(itemId, nextContent) =>
+              updateContent(id, itemId, nextContent)
+            }
+            setColumnIdForDrag={(e) =>
+              e.dataTransfer.setData('kanban-column-id', id)
+            }
+            dragKanbanItem={(fromdColumnId, fromItemId, toItemId) =>
+              dragKanbanItem(fromdColumnId, id, fromItemId, toItemId)
+            }
           />
         ))}
       </KanbanList>
-      <AddButton onClick={addKanbanItem}>+ Add a card</AddButton>
+      <AddButton onClick={() => addKanbanItem(id)}>+ Add a card</AddButton>
     </Container>
   )
 }
