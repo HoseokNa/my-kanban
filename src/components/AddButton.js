@@ -7,5 +7,6 @@ function AddButton({ children, onAdd }) {
 export default AddButton
 
 const Button = styled.button`
+  height: 32px;
   cursor: pointer;
 `
