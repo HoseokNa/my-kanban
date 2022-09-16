@@ -115,6 +115,7 @@ const KanbanColumn = ({
 }
 
 const Container = styled.div`
+  flex-shrink: 0;
   width: 260px;
   display: flex;
   flex-direction: column;
