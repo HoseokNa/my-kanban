@@ -91,6 +91,7 @@ function KanbanItem({
 export default KanbanItem
 
 const Container = styled.div`
+  flex-shrink: 0;
   box-sizing: border-box;
   width: 100%;
   height: 40px;

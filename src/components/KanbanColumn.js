@@ -4,6 +4,9 @@ import AddButton from './AddButton'
 import DeleteButton from './DeleteButton'
 import KanbanItem from './KanbanItem'
 
+/** KanbanItem이 5개 이상이면 스크롤이 가능해야함 */
+const SCROLL_ITEM_SIZE = 5
+
 const KanbanColumn = ({
   id,
   title,
@@ -90,7 +93,7 @@ const KanbanColumn = ({
         <DeleteButton onDelete={() => deleteKanbanColumn(id)} />
       </Header>
 
-      <KanbanList>
+      <KanbanList kanbanListSize={kanbanList.length}>
         {kanbanList.map(({ id: itemId, content }) => (
           <KanbanItem
             key={itemId}
@@ -144,9 +147,12 @@ const Input = styled.input`
 `
 
 const KanbanList = styled.div`
+  max-height: 200px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow-y: ${({ kanbanListSize }) =>
+    kanbanListSize >= SCROLL_ITEM_SIZE ? 'scroll' : 'hidden'};
 `
 
 export default KanbanColumn
