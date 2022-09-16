@@ -271,4 +271,5 @@ export default App
 const Container = styled.div`
   display: flex;
   gap: 24px;
+  padding: 16px 16px;
 `
