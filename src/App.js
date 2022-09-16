@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { useState } from 'react'
+import AddButton from './components/AddButton'
 import KanbanColumn from './components/KanbanColumn'
 
 const DUMMY_DATA = [
@@ -206,6 +207,15 @@ function App() {
 
     setKanbanColumns(nextKanbanColumns)
   }
+  const handleAddKanbanColumn = () => {
+    const nextKanbanColumn = {
+      id: new Date().getMilliseconds(),
+      title: 'title',
+      kanbanList: [],
+    }
+
+    setKanbanColumns([...kanbanColumns, nextKanbanColumn])
+  }
 
   return (
     <Container>
@@ -222,6 +232,7 @@ function App() {
           dragKanbanItem={dragKanbanItem}
         />
       ))}
+      <AddButton onAdd={handleAddKanbanColumn}>+ Add new Column</AddButton>
     </Container>
   )
 }

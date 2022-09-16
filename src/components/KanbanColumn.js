@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { useEffect, useRef, useState } from 'react'
+import AddButton from './AddButton'
 import KanbanItem from './KanbanItem'
 
 const KanbanColumn = ({
@@ -100,7 +101,7 @@ const KanbanColumn = ({
           />
         ))}
       </KanbanList>
-      <AddButton onClick={() => addKanbanItem(id)}>+ Add a card</AddButton>
+      <AddButton onAdd={() => addKanbanItem(id)}>+ Add a card</AddButton>
     </Container>
   )
 }
@@ -129,10 +130,6 @@ const KanbanList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-`
-
-const AddButton = styled.button`
-  cursor: pointer;
 `
 
 export default KanbanColumn
