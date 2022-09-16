@@ -1,10 +1,12 @@
 import styled from '@emotion/styled'
 import { useEffect, useRef, useState } from 'react'
+import DeleteButton from './DeleteButton'
 
 function KanbanItem({
   id,
   content,
   updateContent,
+  deleteKanbanItem,
   setColumnIdForDrag,
   dragKanbanItem,
 }) {
@@ -61,11 +63,15 @@ function KanbanItem({
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDrop={handleDragDrop}
-      onClick={() => {
-        setIsEditMode(true)
-      }}
     >
-      <Content isEditMode={isEditMode}>{content}</Content>
+      <Content
+        onClick={() => {
+          setIsEditMode(true)
+        }}
+        isEditMode={isEditMode}
+      >
+        {content}
+      </Content>
       <Input
         ref={inputRef}
         isEditMode={isEditMode}
@@ -77,6 +83,7 @@ function KanbanItem({
           setIsEditMode(false)
         }}
       />
+      <DeleteButton onDelete={() => deleteKanbanItem(id)} />
     </Container>
   )
 }
@@ -85,11 +92,15 @@ export default KanbanItem
 
 const Container = styled.div`
   box-sizing: border-box;
-  width: 240px;
+  width: 100%;
   height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `
 
 const Content = styled.div`
+  flex-grow: 1;
   display: ${(props) => (props.isEditMode ? 'none' : 'block')};
   width: 100%;
   height: 100%;

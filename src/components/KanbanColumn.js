@@ -11,6 +11,7 @@ const KanbanColumn = ({
   updateTitle,
   updateContent,
   deleteKanbanColumn,
+  deleteKanbanItem,
   addKanbanItem,
   dragKanbanColumn,
   dragKanbanItem,
@@ -98,6 +99,7 @@ const KanbanColumn = ({
             updateContent={(itemId, nextContent) =>
               updateContent(id, itemId, nextContent)
             }
+            deleteKanbanItem={(itemId) => deleteKanbanItem(id, itemId)}
             setColumnIdForDrag={(e) =>
               e.dataTransfer.setData('kanban-column-id', id)
             }

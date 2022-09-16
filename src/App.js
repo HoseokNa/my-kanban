@@ -96,6 +96,21 @@ function App() {
 
     setKanbanColumns(nextKanbanColumns)
   }
+  const deleteKanbanItem = (kanbanColumnId, kanbanItemId) => {
+    const nextKanbanColumns = kanbanColumns.map((kanbanColumn) => {
+      if (kanbanColumn.id !== kanbanColumnId) {
+        return kanbanColumn
+      }
+
+      const nextKanbanList = kanbanColumn.kanbanList.filter(
+        ({ id }) => id !== kanbanItemId,
+      )
+
+      return { ...kanbanColumn, kanbanList: nextKanbanList }
+    })
+
+    setKanbanColumns(nextKanbanColumns)
+  }
   const dragKanbanColumn = (fromId, toId) => {
     if (fromId === toId) {
       return
@@ -241,6 +256,7 @@ function App() {
           updateContent={updateContent}
           addKanbanItem={addKanbanItem}
           deleteKanbanColumn={deleteKanbanColumn}
+          deleteKanbanItem={deleteKanbanItem}
           dragKanbanColumn={dragKanbanColumn}
           dragKanbanItem={dragKanbanItem}
         />
