@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { useState } from 'react'
-import AddButton from './components/AddButton'
-import KanbanColumn from './components/KanbanColumn'
-import { getItem, setItem } from './utils/store'
+import AddButton from './AddButton'
+import KanbanColumn from './KanbanColumn'
+import { getItem, setItem } from '../utils/store'
 
 const LOCAL_KANBAN_COLUMN = 'KANBAN_COLUMNS'
 const MIN_KANBAN_COLUMN_SIZE = 2
