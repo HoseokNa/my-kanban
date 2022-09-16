@@ -109,7 +109,7 @@ const KanbanColumn = ({
           />
         ))}
       </KanbanList>
-      <AddButton onAdd={() => addKanbanItem(id)}>+ Add a card</AddButton>
+      <AddButton onAdd={() => addKanbanItem(id)}>Add a card</AddButton>
     </Container>
   )
 }
@@ -119,7 +119,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 16px 16px;
+  background-color: rgb(251, 251, 250);
 `
 
 const Header = styled.div`
@@ -128,7 +128,9 @@ const Header = styled.div`
 
 const Title = styled.div`
   flex-grow: 1;
-  display: ${(props) => (props.isEditMode ? 'none' : 'block')};
+  display: ${(props) => (props.isEditMode ? 'none' : 'flex')};
+  align-items: center;
+  font-size: 24px;
   font-weight: bold;
 `
 
@@ -136,7 +138,8 @@ const Input = styled.input`
   display: ${(props) => (props.isEditMode ? 'block' : 'none')};
   width: 100%;
   height: 100%;
-  border: solid 2px;
+  font-size: 24px;
+  font-weight: bold;
 `
 
 const KanbanList = styled.div`

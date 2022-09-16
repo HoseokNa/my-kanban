@@ -97,14 +97,20 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  background-color: white;
 `
 
 const Content = styled.div`
   flex-grow: 1;
-  display: ${(props) => (props.isEditMode ? 'none' : 'block')};
   width: 100%;
   height: 100%;
-  border: solid 2px;
+  display: ${(props) => (props.isEditMode ? 'none' : 'flex')};
+  align-items: center;
+  padding-left: 8px;
+  box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px,
+    rgb(15 15 15 / 10%) 0px 2px 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const Input = styled.input`

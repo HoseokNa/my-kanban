@@ -261,7 +261,7 @@ function App() {
           dragKanbanItem={dragKanbanItem}
         />
       ))}
-      <AddButton onAdd={handleAddKanbanColumn}>+ Add new Column</AddButton>
+      <AddButton onAdd={handleAddKanbanColumn}>Add new Column</AddButton>
     </Container>
   )
 }
@@ -271,4 +271,5 @@ export default App
 const Container = styled.div`
   display: flex;
   gap: 24px;
+  padding: 16px 16px;
 `
