@@ -3,6 +3,7 @@ import { useState } from 'react'
 import AddButton from './components/AddButton'
 import KanbanColumn from './components/KanbanColumn'
 
+const MIN_KANBAN_COLUMN_SIZE = 2
 const DUMMY_DATA = [
   {
     id: 1,
@@ -80,6 +81,32 @@ function App() {
         ...kanbanColumn,
         kanbanList: [...kanbanColumn.kanbanList, nextItem],
       }
+    })
+
+    setKanbanColumns(nextKanbanColumns)
+  }
+  const deleteKanbanColumn = (deletedId) => {
+    if (kanbanColumns.length === MIN_KANBAN_COLUMN_SIZE) {
+      alert('column은 최소 2개가 있어야하기 때문에 삭제할 수 없습니다.')
+
+      return
+    }
+
+    const nextKanbanColumns = kanbanColumns.filter(({ id }) => id !== deletedId)
+
+    setKanbanColumns(nextKanbanColumns)
+  }
+  const deleteKanbanItem = (kanbanColumnId, kanbanItemId) => {
+    const nextKanbanColumns = kanbanColumns.map((kanbanColumn) => {
+      if (kanbanColumn.id !== kanbanColumnId) {
+        return kanbanColumn
+      }
+
+      const nextKanbanList = kanbanColumn.kanbanList.filter(
+        ({ id }) => id !== kanbanItemId,
+      )
+
+      return { ...kanbanColumn, kanbanList: nextKanbanList }
     })
 
     setKanbanColumns(nextKanbanColumns)
@@ -228,6 +255,8 @@ function App() {
           updateTitle={updateTitle}
           updateContent={updateContent}
           addKanbanItem={addKanbanItem}
+          deleteKanbanColumn={deleteKanbanColumn}
+          deleteKanbanItem={deleteKanbanItem}
           dragKanbanColumn={dragKanbanColumn}
           dragKanbanItem={dragKanbanItem}
         />

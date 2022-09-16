@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { useEffect, useRef, useState } from 'react'
 import AddButton from './AddButton'
+import DeleteButton from './DeleteButton'
 import KanbanItem from './KanbanItem'
 
 const KanbanColumn = ({
@@ -9,6 +10,8 @@ const KanbanColumn = ({
   kanbanList,
   updateTitle,
   updateContent,
+  deleteKanbanColumn,
+  deleteKanbanItem,
   addKanbanItem,
   dragKanbanColumn,
   dragKanbanItem,
@@ -69,20 +72,24 @@ const KanbanColumn = ({
       onDragOver={handleDragOver}
       onDrop={handleDragDrop}
     >
-      <Title onClick={() => setIsEditMode(true)} isEditMode={isEditMode}>
-        {title}
-      </Title>
-      <Input
-        ref={inputRef}
-        isEditMode={isEditMode}
-        value={inputTitle}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        onBlur={() => {
-          setInputTitle(title)
-          setIsEditMode(false)
-        }}
-      />
+      <Header>
+        <Title onClick={() => setIsEditMode(true)} isEditMode={isEditMode}>
+          {title}
+        </Title>
+        <Input
+          ref={inputRef}
+          isEditMode={isEditMode}
+          value={inputTitle}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          onBlur={() => {
+            setInputTitle(title)
+            setIsEditMode(false)
+          }}
+        />
+        <DeleteButton onDelete={() => deleteKanbanColumn(id)} />
+      </Header>
+
       <KanbanList>
         {kanbanList.map(({ id: itemId, content }) => (
           <KanbanItem
@@ -92,6 +99,7 @@ const KanbanColumn = ({
             updateContent={(itemId, nextContent) =>
               updateContent(id, itemId, nextContent)
             }
+            deleteKanbanItem={(itemId) => deleteKanbanItem(id, itemId)}
             setColumnIdForDrag={(e) =>
               e.dataTransfer.setData('kanban-column-id', id)
             }
@@ -114,7 +122,12 @@ const Container = styled.div`
   padding: 16px 16px;
 `
 
+const Header = styled.div`
+  display: flex;
+`
+
 const Title = styled.div`
+  flex-grow: 1;
   display: ${(props) => (props.isEditMode ? 'none' : 'block')};
   font-weight: bold;
 `
