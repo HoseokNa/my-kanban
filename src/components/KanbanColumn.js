@@ -109,7 +109,7 @@ const KanbanColumn = ({
           />
         ))}
       </KanbanList>
-      <AddButton onAdd={() => addKanbanItem(id)}>+ Add a card</AddButton>
+      <AddButton onAdd={() => addKanbanItem(id)}>Add a card</AddButton>
     </Container>
   )
 }

@@ -261,7 +261,7 @@ function App() {
           dragKanbanItem={dragKanbanItem}
         />
       ))}
-      <AddButton onAdd={handleAddKanbanColumn}>+ Add new Column</AddButton>
+      <AddButton onAdd={handleAddKanbanColumn}>Add new Column</AddButton>
     </Container>
   )
 }
