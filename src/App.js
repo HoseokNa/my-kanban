@@ -2,9 +2,11 @@ import styled from '@emotion/styled'
 import { useState } from 'react'
 import AddButton from './components/AddButton'
 import KanbanColumn from './components/KanbanColumn'
+import { getItem, setItem } from './utils/store'
 
+const LOCAL_KANBAN_COLUMN = 'KANBAN_COLUMNS'
 const MIN_KANBAN_COLUMN_SIZE = 2
-const DUMMY_DATA = [
+const DEFAULT_KANBAN_COLUMNS = [
   {
     id: 1,
     title: 'title1',
@@ -23,19 +25,16 @@ const DUMMY_DATA = [
       { id: 6, content: '22 세번째' },
     ],
   },
-  {
-    id: 3,
-    title: 'title3',
-    kanbanList: [
-      { id: 7, content: '33 첫번째' },
-      { id: 8, content: '33 두번째' },
-      { id: 9, content: '33 세번째' },
-    ],
-  },
 ]
 
 function App() {
-  const [kanbanColumns, setKanbanColumns] = useState(DUMMY_DATA)
+  const [kanbanColumns, setKanbanColumns] = useState(
+    getItem(LOCAL_KANBAN_COLUMN, DEFAULT_KANBAN_COLUMNS),
+  )
+  const updateKanbanColumns = (nextKanbanColumns) => {
+    setItem(LOCAL_KANBAN_COLUMN, nextKanbanColumns)
+    setKanbanColumns(nextKanbanColumns)
+  }
   const updateTitle = (kanbanColumnId, nextTitle) => {
     const nextKanbanColumns = kanbanColumns.map((kanbanColumn) => {
       if (kanbanColumn.id !== kanbanColumnId) {
@@ -45,7 +44,7 @@ function App() {
       return { ...kanbanColumn, title: nextTitle }
     })
 
-    setKanbanColumns(nextKanbanColumns)
+    updateKanbanColumns(nextKanbanColumns)
   }
   const updateContent = (kanbanColumnId, kanbanItemId, nextContent) => {
     const nextKanbanColumns = kanbanColumns.map((kanbanColumn) => {
@@ -64,7 +63,7 @@ function App() {
       return { ...kanbanColumn, kanbanList: nextKanbanList }
     })
 
-    setKanbanColumns(nextKanbanColumns)
+    updateKanbanColumns(nextKanbanColumns)
   }
   const addKanbanItem = (kanbanColumnId) => {
     const nextKanbanColumns = kanbanColumns.map((kanbanColumn) => {
@@ -83,7 +82,7 @@ function App() {
       }
     })
 
-    setKanbanColumns(nextKanbanColumns)
+    updateKanbanColumns(nextKanbanColumns)
   }
   const deleteKanbanColumn = (deletedId) => {
     if (kanbanColumns.length === MIN_KANBAN_COLUMN_SIZE) {
@@ -94,7 +93,7 @@ function App() {
 
     const nextKanbanColumns = kanbanColumns.filter(({ id }) => id !== deletedId)
 
-    setKanbanColumns(nextKanbanColumns)
+    updateKanbanColumns(nextKanbanColumns)
   }
   const deleteKanbanItem = (kanbanColumnId, kanbanItemId) => {
     const nextKanbanColumns = kanbanColumns.map((kanbanColumn) => {
@@ -109,7 +108,7 @@ function App() {
       return { ...kanbanColumn, kanbanList: nextKanbanList }
     })
 
-    setKanbanColumns(nextKanbanColumns)
+    updateKanbanColumns(nextKanbanColumns)
   }
   const dragKanbanColumn = (fromId, toId) => {
     if (fromId === toId) {
@@ -136,7 +135,7 @@ function App() {
           nextKanbanColumns[toIndex],
         )
 
-    setKanbanColumns(nextKanbanColumns)
+    updateKanbanColumns(nextKanbanColumns)
   }
   const dragKanbanItem = (
     fromKanbanColumnId,
@@ -184,7 +183,7 @@ function App() {
         return { ...kanbanColumn, kanbanList: nextKanbanItems }
       })
 
-      setKanbanColumns(nextKanbanColumns)
+      updateKanbanColumns(nextKanbanColumns)
 
       return
     }
@@ -232,7 +231,7 @@ function App() {
       return { ...kanbanColumn, kanbanList: nextToKanbanItems }
     })
 
-    setKanbanColumns(nextKanbanColumns)
+    updateKanbanColumns(nextKanbanColumns)
   }
   const handleAddKanbanColumn = () => {
     const nextKanbanColumn = {
@@ -241,7 +240,7 @@ function App() {
       kanbanList: [],
     }
 
-    setKanbanColumns([...kanbanColumns, nextKanbanColumn])
+    updateKanbanColumns([...kanbanColumns, nextKanbanColumn])
   }
 
   return (
