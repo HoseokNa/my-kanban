@@ -5,6 +5,8 @@ import KanbanColumn from './components/KanbanColumn'
 import { getItem, setItem } from './utils/store'
 
 const LOCAL_KANBAN_COLUMN = 'KANBAN_COLUMNS'
+/** KanbanColumn이 5개 이상이면 스크롤이 가능해야함 */
+const X_SCROLL_COLUM_SIZE = 5
 const MIN_KANBAN_COLUMN_SIZE = 2
 const DEFAULT_KANBAN_COLUMNS = [
   {
@@ -244,7 +246,7 @@ function App() {
   }
 
   return (
-    <Container>
+    <Container kanbanColumnSize={kanbanColumns.length}>
       {kanbanColumns.map(({ id, title, kanbanList }) => (
         <KanbanColumn
           key={id}
@@ -268,7 +270,11 @@ function App() {
 export default App
 
 const Container = styled.div`
+  box-sizing: border-box;
+  width: 100%;
   display: flex;
   gap: 24px;
   padding: 16px 16px;
+  overflow-x: ${({ kanbanColumnSize }) =>
+    kanbanColumnSize >= X_SCROLL_COLUM_SIZE ? 'scroll' : 'hidden'};
 `
